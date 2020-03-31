@@ -1,0 +1,30 @@
+#
+#Backuping configuration of gnome desktop
+#
+cd ~
+mkdir ~/Documents/Linux_configuration/gnome-backups
+#backup the dconf data, to only backup de gnome desktop configuration use "dconf dump /org/gnome > gnome-backup"
+dconf dump / > saved_settings.dconf
+#backup icons
+tar -cvpf custom-icons.tar.gz /usr/share/icons
+#backup themes
+tar -cvpf custom-themes.tar.gz /usr/share/themes
+#backup extensions
+tar -cvpf custom-extensions.tar.gz ~/.local/share/gnome-shell/extensions/
+#move all to the destination folder
+mv *.tar.gz ~/Documents/Linux_configuration/gnome-backups/
+mv saver_settings.dconf ~/Documents/Linux_configuration/gnome-backups/
+mv custom-extensions.tar.gz ~/Documents/Linux_configuration/gnome-backups/
+
+#
+#Restoring configuration of gnome desktop
+#
+cd ~/Downloads/Linux_configurations/gnome-backups/
+dconf load / < saved_settings.dconf
+#to only backup de gnome desktop configuration use // dconf load /org/gnome < gnome-backup
+sudo tar --extract --file custom-icons.tar.gz -C /usr/share/ --strip-components=1 --overwrite 
+sudo tar --extract --file custom-themes.tar.gz -C /usr/share/ --strip-components=1 --overwrite
+
+
+#For login screen
+cp greeter.dconf-defaults /etc/gdm3/greeter.dconf-defaults
